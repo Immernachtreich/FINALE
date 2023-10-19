@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
   KeyboardTypeOptions,
+  NativeSyntheticEvent,
   StyleSheet,
+  Text,
   TextInput,
+  TextInputFocusEventData,
+  TextInputProps,
   TextStyle,
   TouchableOpacity,
   View,
@@ -10,16 +14,12 @@ import {
 import { COLORS } from '../../models/util';
 import Icon from 'react-native-vector-icons/Feather';
 
-type Props = {
-  id?: string;
-  placeholder?: string;
-  secureInput?: boolean;
+interface Props extends TextInputProps {
   icon?: string;
-  spellCheck?: boolean;
-  keyboardType?: KeyboardTypeOptions;
-  bindingFunction?: (...args: any[]) => any;
-  bindingValue?: string;
-};
+  invalid?: boolean;
+  isDirty?: boolean;
+  invalidMsg?: string;
+}
 
 export function BasicInput(props: Props): React.JSX.Element {
   // Input Style
@@ -41,7 +41,7 @@ export function BasicInput(props: Props): React.JSX.Element {
 
   // Set initial values
   useEffect(() => {
-    setIsInputSecured(props.secureInput ?? false);
+    setIsInputSecured(props.secureTextEntry ?? false);
   }, []);
 
   const changeInputStyle = (type: 'focus' | 'blur') => {
@@ -65,39 +65,49 @@ export function BasicInput(props: Props): React.JSX.Element {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Initial Icon */}
-      {props.icon && <Icon name={props.icon} color={inputStyle.color} style={styles.icon} />}
+    <>
+      <View style={styles.container}>
+        {/* Initial Icon */}
+        {props.icon && <Icon name={props.icon} color={inputStyle.color} style={styles.icon} />}
 
-      {/* Actual Input field */}
-      <TextInput
-        placeholder={props.placeholder}
-        placeholderTextColor={inputStyle.color}
-        style={inputStyle}
-        secureTextEntry={isInputSecured}
-        onFocus={() => changeInputStyle('focus')}
-        onBlur={() => changeInputStyle('blur')}
-        // Extra stuff
-        /** Spell check is reversed true, doesn't check and false checks */
-        spellCheck={props.spellCheck ?? true}
-        keyboardType={props.keyboardType ?? 'default'}
-        // Binding
-        value={props.bindingValue}
-        onChange={e => props.bindingFunction && props.bindingFunction(e, props.id)}
-      />
+        {/* Actual Input field */}
+        <TextInput
+          placeholder={props.placeholder}
+          placeholderTextColor={inputStyle.color}
+          style={[inputStyle, props.invalid && props.isDirty ? styles.invalid : undefined]}
+          secureTextEntry={isInputSecured}
+          // Actions
+          onFocus={(e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+            changeInputStyle('focus');
+            props.onFocus && props.onFocus(e);
+          }}
+          onBlur={(e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+            changeInputStyle('blur');
+            props.onBlur && props.onBlur(e);
+          }}
+          // Extra stuff
+          spellCheck={props.spellCheck ?? false}
+          keyboardType={props.keyboardType ?? 'default'}
+          // Binding
+          value={props.value}
+          onChangeText={props.onChangeText}
+        />
 
-      {/* Secure Icon */}
-      {props.icon && props.secureInput && (
-        <TouchableOpacity
-          style={styles.secureBtn}
-          onPress={() => {
-            setIsInputSecured(!isInputSecured);
-            setEyeIcon(eyeIcon === 'eye' ? 'eye-off' : 'eye');
-          }}>
-          <Icon name={eyeIcon} color={inputStyle.color} style={styles.secureIcon} />
-        </TouchableOpacity>
-      )}
-    </View>
+        {/* Secure Icon */}
+        {props.icon && props.secureTextEntry && (
+          <TouchableOpacity
+            style={styles.secureBtn}
+            onPress={() => {
+              setIsInputSecured(!isInputSecured);
+              setEyeIcon(eyeIcon === 'eye' ? 'eye-off' : 'eye');
+            }}>
+            <Icon name={eyeIcon} color={inputStyle.color} style={styles.secureIcon} />
+          </TouchableOpacity>
+        )}
+      </View>
+      {/* Error message */}
+      {props.invalid && props.isDirty && <Text style={styles.invalidText}>{props.invalidMsg}</Text>}
+    </>
   );
 }
 
@@ -126,5 +136,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     position: 'absolute',
     right: 0,
+  },
+  invalid: {
+    borderBottomColor: 'red',
+  },
+  invalidText: {
+    color: 'red',
   },
 });

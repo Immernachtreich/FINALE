@@ -6,6 +6,7 @@ export type RootStackParamsList = {
   Welcome: undefined;
   Login: undefined;
   Signup: undefined;
+  HomeScreen: undefined;
 };
 
 export const COLORS = {
