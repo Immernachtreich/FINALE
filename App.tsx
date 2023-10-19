@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { RootStackParamsList } from './models/util';
 import Welcome from './components/welcome';
 import Signup from './components/signup';
+import Home_Screen from './components/home_screen';
 
 const RootStack = createStackNavigator<RootStackParamsList>();
 
@@ -14,7 +15,8 @@ function App(): JSX.Element {
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
         <RootStack.Screen name="SplashScreen" component={SplashScreen} />
         <RootStack.Screen name="Welcome" component={Welcome} />
-        <RootStack.Screen name="Signup" component={Signup}></RootStack.Screen>
+        <RootStack.Screen name="Signup" component={Signup} />
+        <RootStack.Screen name="HomeScreen" component={Home_Screen} />
       </RootStack.Navigator>
     </NavigationContainer>
   );

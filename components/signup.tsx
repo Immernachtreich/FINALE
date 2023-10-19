@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
-import {
-  NativeSyntheticEvent,
-  StyleSheet,
-  Text,
-  TextInputChangeEventData,
-  View,
-} from 'react-native';
-import PrimaryBackground from './UI/primary-background';
-import { COLORS, RootStackParamsList } from '../models/util';
+// Package imports
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {
+  useForm,
+  Controller,
+  SubmitErrorHandler,
+  FieldErrors,
+  SubmitHandler,
+} from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+// Component imports
+import PrimaryBackground from './UI/primary-background';
 import { PreviousButton } from './UI/navigation_buttons';
 import { BasicInput } from './UI/inputs';
 import PrimaryButton from './UI/button';
 
-import { useForm, Controller, SubmitErrorHandler, FieldValues, FieldErrors } from 'react-hook-form';
+// Model imports
+import { COLORS, RootStackParamsList } from '../models/util';
 
 type Props = NativeStackScreenProps<RootStackParamsList, 'Signup'>;
 
@@ -27,57 +33,33 @@ type SignupForm = {
  * Main component
  */
 function Signup({ navigation }: Props): JSX.Element {
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    formState: { errors },
-  } = useForm<SignupForm>();
-
-  const onError: SubmitErrorHandler<FieldValues> = (
-    errors: FieldErrors<FieldValues>,
-    e?: React.BaseSyntheticEvent<object, any, any>,
-  ) => {};
-
-  const [signupForm, setSignupForm] = useState<SignupForm>({
-    name: '',
-    email: '',
-    password: '',
+  const signupFormSchema = yup.object().shape({
+    name: yup
+      .string()
+      .min(2, 'Name must be minimum 2 characters')
+      .max(30, 'Name must be maximum 30 characters')
+      .required('Name is required'),
+    email: yup.string().email('Email must be a valid email').required('Email is required'),
+    password: yup
+      .string()
+      .matches(
+        RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'),
+        'Password must be at least 8 characters long, must contain at least one uppercase letter, one lowercase letter, one number and one special character',
+      )
+      .required('Password is required'),
   });
 
-  const [isValidated, setIsValidated] = useState<boolean>(true);
+  const {
+    handleSubmit,
+    control,
+    formState: { isSubmitSuccessful },
+  } = useForm<SignupForm>({ resolver: yupResolver(signupFormSchema) });
 
-  const onFormChange = (
-    e: NativeSyntheticEvent<TextInputChangeEventData>,
-    id: keyof SignupForm,
-  ) => {
-    const updatedForm: SignupForm = { ...signupForm };
-    updatedForm[id] = e.nativeEvent.text;
-    setSignupForm(updatedForm);
-  };
-
-  const validatorFn = (key: keyof SignupForm, value: string): boolean => {
-    // Return true if correct value and false if invalid
-    switch (key) {
-      case 'name':
-        return value.length > 2 && value.length < 30;
-      case 'email':
-        return value.includes('@') && value.includes('.');
-      case 'password':
-        return !value.match('^(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$');
-      default:
-        return false;
-    }
-  };
-
-  const signup = () => {
-    // Validate the form
-    Object.keys(signupForm).forEach((k: string) => {
-      if (!isValidated) return;
-      const key: keyof SignupForm = k as keyof SignupForm;
-      setIsValidated(isValidated && validatorFn(key, signupForm[key]));
-    });
+  const onSignup: SubmitHandler<SignupForm> = (value: SignupForm) => {
+    /**
+     * Send request to backend with the data and store the token in some storage
+     * After storing the token, redirect the user to the main page.
+     */
   };
 
   return (
@@ -110,37 +92,66 @@ function Signup({ navigation }: Props): JSX.Element {
 
         {/* Signup Container */}
         <View style={styles.container}>
-          <BasicInput
-            placeholder="Name"
-            icon="user"
-            spellCheck={true}
-            bindingFunction={onFormChange}
-            bindingValue={signupForm.name}
-            id="name"
+          {/* Name */}
+          <Controller
+            name="name"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <BasicInput
+                placeholder="Name"
+                icon="user"
+                spellCheck={true}
+                id="name"
+                onChangeText={value => onChange(value)}
+                value={value}
+                invalid={control.getFieldState('name').invalid}
+                isDirty={control.getFieldState('name').isDirty || !isSubmitSuccessful}
+                invalidMsg={control.getFieldState('name').error?.message}
+              />
+            )}
           />
-          <BasicInput
-            placeholder="Email"
-            icon="mail"
-            keyboardType="email-address"
-            bindingFunction={onFormChange}
-            bindingValue={signupForm.email}
-            id="email"
+          <Controller
+            name="email"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <BasicInput
+                placeholder="Email"
+                icon="mail"
+                spellCheck={true}
+                id="email"
+                onChangeText={value => onChange(value)}
+                value={value}
+                invalid={control.getFieldState('email').invalid}
+                isDirty={control.getFieldState('email').isDirty || !isSubmitSuccessful}
+                invalidMsg={control.getFieldState('email').error?.message}
+              />
+            )}
           />
-          <BasicInput
-            placeholder="Password"
-            secureInput={true}
-            icon="lock"
-            bindingFunction={onFormChange}
-            bindingValue={signupForm.password}
-            id="password"
+          <Controller
+            name="password"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <BasicInput
+                placeholder="Password"
+                icon="lock"
+                spellCheck={true}
+                onChangeText={value => onChange(value)}
+                value={value}
+                invalid={control.getFieldState('password').invalid}
+                isDirty={control.getFieldState('password').isDirty || !isSubmitSuccessful}
+                invalidMsg={control.getFieldState('password').error?.message}
+              />
+            )}
           />
 
+          {/* Buttons */}
           <PrimaryButton
             buttonText="Sign up"
             buttonStyle="OUTLINED"
             additonalBtnStyles={{
               marginTop: 20,
             }}
+            onPressEvent={handleSubmit(onSignup)}
           />
           <Text
             style={{
@@ -156,7 +167,6 @@ function Signup({ navigation }: Props): JSX.Element {
               borderColor: COLORS.PRIMARY,
               marginTop: 20,
             }}
-            onPressEvent={signup}
           />
         </View>
       </View>
