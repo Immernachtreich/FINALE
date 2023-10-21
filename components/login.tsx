@@ -20,42 +20,28 @@ import PrimaryButton from './UI/button';
 
 // Model imports
 import { COLORS, RootStackParamsList } from '../models/util';
+import AnchorLink from './UI/link';
 
-type Props = NativeStackScreenProps<RootStackParamsList, 'Signup'>;
+type Props = NativeStackScreenProps<RootStackParamsList, 'Login'>;
 
-type SignupForm = {
-  name: string;
+type LoginForm = {
   email: string;
   password: string;
 };
 
-/**
- * Main component
- */
-function Signup({ navigation }: Props): JSX.Element {
-  const signupFormSchema = yup.object().shape({
-    name: yup
-      .string()
-      .min(2, 'Name must be minimum 2 characters')
-      .max(30, 'Name must be maximum 30 characters')
-      .required('Name is required'),
+const Login = ({ navigation }: Props): React.JSX.Element => {
+  const loginFormSchema = yup.object().shape({
     email: yup.string().email('Email must be a valid email').required('Email is required'),
-    password: yup
-      .string()
-      .matches(
-        RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'),
-        'Password must be at least 8 characters long, must contain at least one uppercase letter, one lowercase letter, one number and one special character',
-      )
-      .required('Password is required'),
+    password: yup.string().required('Password is required'),
   });
 
   const {
     handleSubmit,
     control,
     formState: { isSubmitSuccessful },
-  } = useForm<SignupForm>({ resolver: yupResolver(signupFormSchema) });
+  } = useForm<LoginForm>({ resolver: yupResolver(loginFormSchema) });
 
-  const onSignup: SubmitHandler<SignupForm> = (value: SignupForm) => {
+  const onLogin: SubmitHandler<LoginForm> = (value: LoginForm) => {
     /**
      * Send request to backend with the data and store the token in some storage
      * After storing the token, redirect the user to the main page.
@@ -87,30 +73,12 @@ function Signup({ navigation }: Props): JSX.Element {
             marginTop: 80,
             paddingHorizontal: 20,
           }}>
-          <Text style={styles.text}>{'Create\nAccount'}</Text>
-          <Text style={styles.subText}>One account to hold all your passwords</Text>
+          <Text style={styles.text}>{'Welcome\nBack'}</Text>
+          <Text style={styles.subText}>Glad to have you back!</Text>
         </View>
 
         {/* Signup Container */}
         <View style={styles.container}>
-          {/* Name */}
-          <Controller
-            name="name"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <BasicInput
-                placeholder="Name"
-                icon="user"
-                spellCheck={true}
-                id="name"
-                onChangeText={value => onChange(value)}
-                value={value}
-                invalid={control.getFieldState('name').invalid}
-                isDirty={control.getFieldState('name').isDirty || !isSubmitSuccessful}
-                invalidMsg={control.getFieldState('name').error?.message}
-              />
-            )}
-          />
           <Controller
             name="email"
             control={control}
@@ -136,8 +104,8 @@ function Signup({ navigation }: Props): JSX.Element {
                 placeholder="Password"
                 icon="lock"
                 spellCheck={true}
-                secureTextEntry={true}
                 onChangeText={value => onChange(value)}
+                secureTextEntry={true}
                 value={value}
                 invalid={control.getFieldState('password').invalid}
                 isDirty={control.getFieldState('password').isDirty || !isSubmitSuccessful}
@@ -146,14 +114,18 @@ function Signup({ navigation }: Props): JSX.Element {
             )}
           />
 
+          <View style={styles.linkContainer}>
+            <AnchorLink text="Forgot password?" />
+          </View>
+
           {/* Buttons */}
           <PrimaryButton
-            buttonText="Sign up"
+            buttonText="Login"
             buttonStyle="OUTLINED"
             additonalBtnStyles={{
               marginTop: 20,
             }}
-            onPressEvent={handleSubmit(onSignup)}
+            onPressEvent={handleSubmit(onLogin)}
           />
           <Text
             style={{
@@ -163,19 +135,19 @@ function Signup({ navigation }: Props): JSX.Element {
             -------------------------------- OR --------------------------------
           </Text>
           <PrimaryButton
-            buttonText="Log in"
+            buttonText="Sign up"
             buttonStyle="NORMAL"
             additonalBtnStyles={{
               borderColor: COLORS.PRIMARY,
               marginTop: 20,
             }}
-            onPressEvent={() => navigation.navigate('Login')}
+            onPressEvent={() => navigation.navigate('Signup')}
           />
         </View>
       </View>
     </>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -200,6 +172,11 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
     lineHeight: 25,
   },
+  linkContainer: {
+    display: 'flex',
+    alignItems: 'flex-end',
+    marginBottom: 5,
+  },
 });
 
-export default Signup;
+export default Login;

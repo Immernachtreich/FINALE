@@ -7,7 +7,7 @@ type Props = NativeStackScreenProps<RootStackParamsList, 'SplashScreen'>;
 
 function SplashScreen({ navigation }: Props): JSX.Element {
   useEffect(() => {
-    setTimeout(() => navigation.navigate('Welcome'), 3000);
+    setTimeout(() => navigation.navigate('HomeScreen'), 3000);
   }, []);
 
   return (
@@ -17,7 +17,8 @@ function SplashScreen({ navigation }: Props): JSX.Element {
         animated={true}
         barStyle={'light-content'}
         networkActivityIndicatorVisible={false}
-        backgroundColor={COLORS.PRIMARY}></StatusBar>
+        backgroundColor={COLORS.PRIMARY}
+      />
 
       <View style={styles.logoContainer}>
         <Image

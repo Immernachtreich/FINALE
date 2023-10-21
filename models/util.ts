@@ -11,6 +11,7 @@ export type RootStackParamsList = {
 
 export const COLORS = {
   PRIMARY: 'rgba(197,177,250,255)',
+  SECONDARY: 'rgba(242, 109, 209, 255)',
   WHITE: 'rgba(250,250,250, 255)',
   GREY: 'rgba(180,180,180, 255)',
 };
