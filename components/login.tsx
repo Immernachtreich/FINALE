@@ -31,7 +31,10 @@ type LoginForm = {
 
 const Login = ({ navigation }: Props): React.JSX.Element => {
   const loginFormSchema = yup.object().shape({
-    email: yup.string().email('Email must be a valid email').required('Email is required'),
+    email: yup
+      .string()
+      .email('Email must be a valid email')
+      .required('Email is required'),
     password: yup.string().required('Password is required'),
   });
 
@@ -63,7 +66,8 @@ const Login = ({ navigation }: Props): React.JSX.Element => {
           style={{
             alignSelf: 'flex-start',
           }}>
-          <PreviousButton onPressEvent={() => navigation.goBack()}></PreviousButton>
+          <PreviousButton
+            onPressEvent={() => navigation.goBack()}></PreviousButton>
         </View>
 
         {/* Pandering Text */}
@@ -91,7 +95,9 @@ const Login = ({ navigation }: Props): React.JSX.Element => {
                 onChangeText={value => onChange(value)}
                 value={value}
                 invalid={control.getFieldState('email').invalid}
-                isDirty={control.getFieldState('email').isDirty || !isSubmitSuccessful}
+                isDirty={
+                  control.getFieldState('email').isDirty || !isSubmitSuccessful
+                }
                 invalidMsg={control.getFieldState('email').error?.message}
               />
             )}
@@ -108,14 +114,17 @@ const Login = ({ navigation }: Props): React.JSX.Element => {
                 secureTextEntry={true}
                 value={value}
                 invalid={control.getFieldState('password').invalid}
-                isDirty={control.getFieldState('password').isDirty || !isSubmitSuccessful}
+                isDirty={
+                  control.getFieldState('password').isDirty ||
+                  !isSubmitSuccessful
+                }
                 invalidMsg={control.getFieldState('password').error?.message}
               />
             )}
           />
 
           <View style={styles.linkContainer}>
-            <AnchorLink text="Forgot password?" />
+            <AnchorLink text="Forgot password?" isActive={false} />
           </View>
 
           {/* Buttons */}
