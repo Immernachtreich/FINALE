@@ -13,16 +13,8 @@ const Home_Screen = (): React.JSX.Element => {
     return (
         <>
             <View style={styles.container}>
-                <NavigationContainer independent={true}>
-                    <RootStack.Navigator screenOptions={{ headerShown: false }}>
-                        <RootStack.Screen
-                            name="SplashScreen"
-                            component={SplashScreen}
-                        />
-                    </RootStack.Navigator>
-                </NavigationContainer>
                 {/* <NavigationDrawer></NavigationDrawer> */}
-                <NavigationBottom></NavigationBottom>
+                {/* <NavigationBottom></NavigationBottom> */}
             </View>
         </>
     );
