@@ -1,0 +1,9 @@
+node_modules/*
+public/*
+assets/*
+ios/*
+android/*
+.vscode/*
+.idea/*
+.bundle/*
+__test__
