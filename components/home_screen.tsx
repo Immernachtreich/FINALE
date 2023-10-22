@@ -14,7 +14,7 @@ const Home_Screen = (): React.JSX.Element => {
         <>
             <View style={styles.container}>
                 {/* <NavigationDrawer></NavigationDrawer> */}
-                {/* <NavigationBottom></NavigationBottom> */}
+                <NavigationBottom></NavigationBottom>
             </View>
         </>
     );
