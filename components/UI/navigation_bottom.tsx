@@ -1,9 +1,18 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import IconButton from './icon_button';
-import { COLORS } from '../../models/util';
+import { COLORS, RootStackParamsList } from '../../models/util';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-function NavigationBottom(): React.JSX.Element {
+type Props = {
+    navigation: NativeStackNavigationProp<
+        RootStackParamsList,
+        'HomeScreen',
+        undefined
+    >;
+};
+
+function NavigationBottom({ navigation }: Props): React.JSX.Element {
     return (
         <View style={styles.container}>
             <IconButton
@@ -11,18 +20,21 @@ function NavigationBottom(): React.JSX.Element {
                 activeIcon="home"
                 isActive={true}
                 additionalIconStyle={styles.iconText}
+                iconType="MATERIAL"
             />
             <IconButton
                 icon="plus-circle-outline"
                 activeIcon="plus-circle"
                 isActive={false}
                 additionalIconStyle={styles.iconText}
+                iconType="MATERIAL"
             />
             <IconButton
                 icon="account-outline"
                 activeIcon="account"
                 isActive={false}
                 additionalIconStyle={styles.iconText}
+                iconType="MATERIAL"
             />
         </View>
     );

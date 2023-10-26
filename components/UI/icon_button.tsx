@@ -4,12 +4,15 @@ import {
     TouchableOpacity,
     TouchableOpacityProps,
 } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import { COLORS, ComponentStyle } from '../../models/util';
 
 interface Props extends TouchableOpacityProps {
     icon: string;
+    iconType: 'MATERIAL' | 'FEATHER' | 'ANTDESIGN';
     isActive: boolean;
     activeIcon?: string;
     additionalButtonStyle?: ComponentStyle;
@@ -18,6 +21,19 @@ interface Props extends TouchableOpacityProps {
 
 function IconButton(props: Props): React.JSX.Element {
     const [isActive, setIsActive] = useState<boolean>(false);
+
+    const Icon = (() => {
+        switch (props.iconType) {
+            case 'MATERIAL':
+                return MaterialCommunityIcons;
+            case 'FEATHER':
+                return Feather;
+            case 'ANTDESIGN':
+                return AntDesign;
+            default:
+                return MaterialCommunityIcons;
+        }
+    })();
 
     useEffect(() => setIsActive(props.isActive), [props.isActive]);
 

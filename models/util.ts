@@ -1,3 +1,4 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
 import { TextStyle, ViewStyle, ImageStyle } from 'react-native';
 
 /**
@@ -8,7 +9,14 @@ export type RootStackParamsList = {
     Welcome: undefined;
     Login: undefined;
     Signup: undefined;
-    HomeScreen: undefined;
+    HomeScreen: NavigatorScreenParams<HomeStackParamsList>;
+};
+
+/**
+ * List of all nested routes in the Home component
+ */
+export type HomeStackParamsList = {
+    home: undefined;
 };
 
 export const COLORS = {
