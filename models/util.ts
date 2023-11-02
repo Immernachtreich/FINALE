@@ -17,6 +17,9 @@ export type RootStackParamsList = {
  */
 export type HomeStackParamsList = {
     home: undefined;
+    create: undefined;
+    profile: undefined;
+    vault: undefined;
 };
 
 export const COLORS = {

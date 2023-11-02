@@ -1,7 +1,11 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import IconButton from './icon_button';
-import { COLORS, RootStackParamsList } from '../../models/util';
+import {
+    COLORS,
+    HomeStackParamsList,
+    RootStackParamsList,
+} from '../../models/util';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type Props = {
@@ -13,6 +17,10 @@ type Props = {
 };
 
 function NavigationBottom({ navigation }: Props): React.JSX.Element {
+    const navigateToHomeScreenPage = (screen: keyof HomeStackParamsList) => {
+        navigation.navigate('HomeScreen', { screen: screen });
+    };
+
     return (
         <View style={styles.container}>
             <IconButton
@@ -21,6 +29,15 @@ function NavigationBottom({ navigation }: Props): React.JSX.Element {
                 isActive={true}
                 additionalIconStyle={styles.iconText}
                 iconType="MATERIAL"
+                onPress={() => navigateToHomeScreenPage('home')}
+            />
+            <IconButton
+                icon="key-outline"
+                activeIcon="key"
+                isActive={false}
+                additionalIconStyle={styles.iconText}
+                iconType="MATERIAL"
+                onPress={() => navigateToHomeScreenPage('profile')}
             />
             <IconButton
                 icon="plus-circle-outline"
@@ -28,6 +45,7 @@ function NavigationBottom({ navigation }: Props): React.JSX.Element {
                 isActive={false}
                 additionalIconStyle={styles.iconText}
                 iconType="MATERIAL"
+                onPress={() => navigateToHomeScreenPage('create')}
             />
             <IconButton
                 icon="account-outline"
@@ -35,6 +53,7 @@ function NavigationBottom({ navigation }: Props): React.JSX.Element {
                 isActive={false}
                 additionalIconStyle={styles.iconText}
                 iconType="MATERIAL"
+                onPress={() => navigateToHomeScreenPage('profile')}
             />
         </View>
     );

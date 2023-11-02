@@ -44,7 +44,8 @@ function IconButton(props: Props): React.JSX.Element {
                     styles.button,
                     props.additionalButtonStyle,
                     props.isActive && styles.isActiveButton,
-                ]}>
+                ]}
+                onPress={props.onPress}>
                 <Icon
                     name={
                         isActive ? props.activeIcon ?? props.icon : props.icon
