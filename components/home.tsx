@@ -16,66 +16,78 @@ function Home(props: Props): React.JSX.Element {
             id: 1,
             name: 'Facebook',
             site: 'https://facebook.com',
+            password: 'ABCD',
         },
         {
             id: 2,
             name: 'Instagram',
             site: 'https://instagram.com',
+            password: 'ABCD',
         },
         {
             id: 3,
             name: 'Facebook',
             site: 'https://facebook.com',
+            password: 'ABCD',
         },
         {
             id: 4,
             name: 'Instagram',
             site: 'https://instagram.com',
+            password: 'ABCD',
         },
     ];
 
+    // TODO: Add copy to clipboard functionality to copy button
     const renderPasswords = () => {
+        const passwordCardStyles = StyleSheet.create({
+            cardContainer: {
+                backgroundColor: COLORS.PRIMARY,
+                margin: 0,
+                marginVertical: 10,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+            },
+            nameContainer: {
+                flex: 0.7,
+            },
+            iconContainer: {
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'row',
+                flex: 0.3,
+            },
+            nameTextStyle: {
+                color: COLORS.WHITE,
+                fontFamily: 'Kanit-Regular',
+                fontSize: 16,
+            },
+            siteTextStyle: {
+                color: COLORS.WHITE,
+                fontFamily: 'Kanit-Regular',
+                fontSize: 12,
+            },
+        });
+
         return passwords.map(pass => (
-            <Card
-                key={pass.id}
-                cardStyle={{
-                    backgroundColor: COLORS.PRIMARY,
-                    margin: 0,
-                    marginVertical: 10,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                }}>
-                <View
-                    style={{
-                        flex: 0.7,
-                    }}>
+            <Card key={pass.id} cardStyle={passwordCardStyles.cardContainer}>
+                {/* Container for Name and url */}
+                <View style={passwordCardStyles.nameContainer}>
                     <Text
-                        style={{
-                            color: COLORS.WHITE,
-                            fontFamily: 'Kanit-Regular',
-                            fontSize: 16,
-                        }}>
+                        style={passwordCardStyles.nameTextStyle}
+                        numberOfLines={1}>
                         {pass.name}
                     </Text>
                     <Text
-                        style={{
-                            color: COLORS.WHITE,
-                            fontFamily: 'Kanit-Regular',
-                            fontSize: 12,
-                        }}
+                        style={passwordCardStyles.siteTextStyle}
                         numberOfLines={1}>
                         {pass.site}
                     </Text>
                 </View>
 
-                <View
-                    style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        flex: 0.3,
-                    }}>
+                {/* Container for extra buttons */}
+                <View style={passwordCardStyles.iconContainer}>
                     <IconButton
                         icon="content-copy"
                         iconType="MATERIAL"
@@ -96,12 +108,13 @@ function Home(props: Props): React.JSX.Element {
     return (
         // Container
         <View style={styles.container}>
-            {/* Card */}
+            {/* Primary Card */}
             <Card cardStyle={{ backgroundColor: COLORS.PRIMARY }}>
                 <Text style={styles.cardText}>Generate a new Password</Text>
                 <PrimaryButton buttonStyle="OUTLINED" buttonText="Generate" />
             </Card>
 
+            {/* Top used password Container */}
             <Card>
                 <View style={styles.flexContainer}>
                     <Text style={styles.subTitleText}>Manage Passwords</Text>
@@ -112,10 +125,7 @@ function Home(props: Props): React.JSX.Element {
                     />
                 </View>
 
-                <ScrollView
-                    style={{
-                        height: 200,
-                    }}>
+                <ScrollView style={styles.managePasswordsContainer}>
                     {renderPasswords()}
                 </ScrollView>
             </Card>
@@ -142,6 +152,9 @@ const styles = StyleSheet.create({
         fontFamily: 'Kanit-Regular',
         color: COLORS.GREY,
         fontSize: 18,
+    },
+    managePasswordsContainer: {
+        height: 200,
     },
 });
 
