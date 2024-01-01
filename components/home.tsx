@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { COLORS, HomeStackParamsList } from '../models/util';
 import { StyleSheet, Text, View } from 'react-native';
@@ -10,33 +10,35 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 type Props = NativeStackScreenProps<HomeStackParamsList, 'home'>;
 
+const passwords = [
+    {
+        id: 1,
+        name: 'Facebook',
+        site: 'https://facebook.com',
+        password: 'ABCD',
+    },
+    {
+        id: 2,
+        name: 'Instagram',
+        site: 'https://instagram.com',
+        password: 'ABCD',
+    },
+    {
+        id: 3,
+        name: 'Facebook',
+        site: 'https://facebook.com',
+        password: 'ABCD',
+    },
+    {
+        id: 4,
+        name: 'Instagram',
+        site: 'https://instagram.com',
+        password: 'ABCD',
+    },
+];
+
 function Home(props: Props): React.JSX.Element {
-    const passwords = [
-        {
-            id: 1,
-            name: 'Facebook',
-            site: 'https://facebook.com',
-            password: 'ABCD',
-        },
-        {
-            id: 2,
-            name: 'Instagram',
-            site: 'https://instagram.com',
-            password: 'ABCD',
-        },
-        {
-            id: 3,
-            name: 'Facebook',
-            site: 'https://facebook.com',
-            password: 'ABCD',
-        },
-        {
-            id: 4,
-            name: 'Instagram',
-            site: 'https://instagram.com',
-            password: 'ABCD',
-        },
-    ];
+    const [randomPassword, setRandomPassword] = useState<string | undefined>();
 
     // TODO: Add copy to clipboard functionality to copy button
     const renderPasswords = () => {
@@ -111,7 +113,14 @@ function Home(props: Props): React.JSX.Element {
             {/* Primary Card */}
             <Card cardStyle={{ backgroundColor: COLORS.PRIMARY }}>
                 <Text style={styles.cardText}>Generate a new Password</Text>
-                <PrimaryButton buttonStyle="OUTLINED" buttonText="Generate" />
+                <PrimaryButton
+                    buttonStyle="OUTLINED"
+                    buttonText="Generate"
+                    onPressEvent={() => setRandomPassword(undefined)}
+                />
+
+                {/* Randomly generated password container */}
+                {randomPassword && <Text>{randomPassword}</Text>}
             </Card>
 
             {/* Top used password Container */}
